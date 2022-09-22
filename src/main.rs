@@ -9,23 +9,15 @@ struct Cli {
     #[clap(long = "server")]
     server: Option<bool>,
 
-    #[clap(short = 'p', long = "port")]
-    port: Option<String>,
+    #[clap(short = 'p', long = "port", default_value = "3333")]
+    port: String,
 
-    #[clap(short = 's', long = "size")]
-    board_size: Option<usize>,
+    #[clap(short = 's', long = "size", default_value = "3")]
+    board_size: usize,
 }
 
 fn main() {
     let args = Cli::parse();
-    let board_size = match args.board_size {
-        Some(s) => s,
-        None => 3,
-    };
-    let port = match args.port {
-        Some(p) => p,
-        None => String::from("3333"),
-    };
 
     let run_server = match args.server {
         Some(b) => b,
@@ -39,8 +31,8 @@ fn main() {
     };
 
     if run_server {
-        server::run(board_size);
+        server::run(args.board_size);
     } else {
-        client::run(port);
+        client::run(args.port);
     }
 }
