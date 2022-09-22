@@ -3,7 +3,7 @@ mod errors;
 pub mod server;
 
 use std::fmt::{self, Display};
-use tabled::{builder::Builder, Style, Table, Tabled};
+use tabled::{builder::Builder, Style, Tabled};
 
 pub use errors::BoardError;
 
