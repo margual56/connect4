@@ -117,7 +117,12 @@ impl Board {
         let mut builder = Builder::default();
 
         for i in 0..self.size {
-            let s = self.state.clone().into_iter().map(|v| v[i]).collect::<Vec<Chip>>();
+            let s = self
+                .state
+                .clone()
+                .into_iter()
+                .map(|v| v[i])
+                .collect::<Vec<Chip>>();
             builder.add_record(s);
         }
 
