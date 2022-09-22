@@ -18,7 +18,10 @@ pub fn run(port: String) {
                             1 => println!("It's your turn!"),
                             2 => println!("Illegal move, please try again"),
                             3 => println!("Game ended"),
-                            _ => println!("Oops! Something went wrong..."),
+                            _ => println!(
+                                "Oops! Something went wrong... Code received was '{}'",
+                                data[0]
+                            ),
                         }
 
                         data[0] != 1 && data[0] != 2 && data[0] != 3

@@ -46,11 +46,11 @@ impl Board {
         self.moves += 1;
         let mut dropped_at: Option<(usize, usize)> = None;
 
-        for i in 0..(self.size - 1){
+        for i in 0..(self.size - 1) {
             // println!("Checking if cell ({}, {}) is not NONE. Value: {:?}", col, i+1, self.state[col][i+1]);
             // println!("i+1 == self.size --> {}+1 == {} --> {}", i, self.size, i+1 == self.size);
 
-            if self.state[col][i+1] != Chip::NONE {
+            if self.state[col][i + 1] != Chip::NONE {
                 self.state[col][i] = chip.clone();
 
                 println!("New state: {}", self.to_string());
@@ -61,11 +61,11 @@ impl Board {
         }
 
         if dropped_at.is_none() {
-            self.state[col][self.size-1] = chip.clone();
+            self.state[col][self.size - 1] = chip.clone();
 
             println!("New state: {}", self.to_string());
 
-            dropped_at = Some((col, self.size-1));
+            dropped_at = Some((col, self.size - 1));
         }
 
         return Ok(self.check_state(dropped_at.unwrap(), chip));
