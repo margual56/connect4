@@ -6,7 +6,7 @@ use std::fmt::{self, Display};
 
 pub use errors::BoardError;
 
-#[derive(Clone, Copy, PartialEq)]
+#[derive(Clone, Copy, PartialEq, Debug)]
 pub enum Chip {
     YELLOW,
     RED,
@@ -44,20 +44,31 @@ impl Board {
         }
 
         self.moves += 1;
-        let mut dropped_at = (col, 0);
+        let mut dropped_at: Option<(usize, usize)> = None;
 
         for i in 0..(self.size - 1){
-            if self.state[col][i+1] != Chip::NONE || i+1 == self.size {
+            // println!("Checking if cell ({}, {}) is not NONE. Value: {:?}", col, i+1, self.state[col][i+1]);
+            // println!("i+1 == self.size --> {}+1 == {} --> {}", i, self.size, i+1 == self.size);
+
+            if self.state[col][i+1] != Chip::NONE {
                 self.state[col][i] = chip.clone();
 
                 println!("New state: {}", self.to_string());
 
-                dropped_at.1 = i;
+                dropped_at = Some((col, i));
                 break;
             }
         }
 
-        return Ok(self.check_state(dropped_at, chip));
+        if dropped_at.is_none() {
+            self.state[col][self.size-1] = chip.clone();
+
+            println!("New state: {}", self.to_string());
+
+            dropped_at = Some((col, self.size-1));
+        }
+
+        return Ok(self.check_state(dropped_at.unwrap(), chip));
     }
 
     /// Returns either None or a winner
@@ -106,16 +117,16 @@ impl Board {
     pub fn to_string(&mut self) -> String {
         let mut out = String::new();
 
-        for i in 0..self.size {
-            for j in 0..self.size {
-                out += &format!("|{}", self.state[i][j]);
+        for j in 0..self.size {
+            for i in 0..self.size {
+                out += &format!("| {} ", self.state[i][j]);
             }
 
             out += "|\n";
         }
 
         for _ in 0..self.size {
-            out += "--";
+            out += "----";
         }
 
         return out + "-\n";
