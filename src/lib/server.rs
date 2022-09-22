@@ -69,6 +69,10 @@ fn handle_turn(board: &mut Board, mut stream: &TcpStream, c: Chip) -> Option<Chi
             let retry: bool = match board.drop_chip(result, c) {
                 Ok(r) => {
                     stream.write(&board.to_string().as_bytes()).unwrap();
+                    println!(
+                        "Board size in bytes: {}",
+                        board.to_string().as_bytes().len()
+                    );
                     return r;
                 }
                 Err(e) => {

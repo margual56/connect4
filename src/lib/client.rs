@@ -38,7 +38,16 @@ pub fn run(port: String) {
                     return;
                 }
 
-                let mut data2 = [0 as u8; 4 * 9 * 9];
+                // FIXME: The formula is incorrect
+                // Size of the board representation in bytes
+                // Each cell has its borders (+1) and surrounding spaces (+2), so
+                // Each cell has 4 characters wide and 4 characters tall (-1 repeated character), so
+                // The board has size*size cells. Therefore the size is size*size*(4*4 - 1) = size*size*15, but
+                // We need to add the final border (+size*2)
+                const MAX_BOARD_SIZE: usize = 9;
+                let mut data2 =
+                    [0 as u8; MAX_BOARD_SIZE * MAX_BOARD_SIZE * 30 + MAX_BOARD_SIZE * 2];
+
                 match stream.read(&mut data2) {
                     Ok(size) => {
                         println!("\n{}", String::from_utf8_lossy(&data2[0..size]));
