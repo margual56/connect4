@@ -19,7 +19,7 @@ pub fn run(size: usize) {
     let mut winner: Option<Chip> = None;
     let mut player1_turn = true;
     while winner.is_none() {
-        println!("Moves: {}", board.moves);
+        println!("Turn {}", board.moves);
         println!("{}", board.to_string());
         if player1_turn {
             winner = handle_turn(board, &player1, Chip::YELLOW);
@@ -30,10 +30,10 @@ pub fn run(size: usize) {
         player1_turn = !player1_turn;
     }
 
-    println!("Telling player1 that game has ended...");
+    print!("Telling player1 that game has ended... ");
     player1.write(&[1 as u8]).unwrap();
     println!("Done!");
-    println!("Telling player2 that game has ended...");
+    print!("Telling player2 that game has ended... ");
     player2.write(&[3 as u8]).unwrap();
     println!("Done!");
 
@@ -43,16 +43,16 @@ pub fn run(size: usize) {
 }
 
 fn handle_turn(board: &mut Board, mut stream: &TcpStream, c: Chip) -> Option<Chip> {
-    println!("Letting player know that it's its turn (sending a 1)...");
+    print!("Letting player know that it's its turn (sending a 1)... ");
     stream.write(&[1 as u8]).unwrap();
 
     println!("Done!");
-    println!("Sending player the board");
+    print!("Sending player the board... ");
 
     stream.write(&board.to_string().as_bytes()).unwrap();
 
     println!("Done!");
-    println!("Waiting for player move...");
+    print!("Waiting for player move... ");
 
     let mut data = [1 as u8; 1];
     while match stream.read(&mut data) {
@@ -67,16 +67,19 @@ fn handle_turn(board: &mut Board, mut stream: &TcpStream, c: Chip) -> Option<Chi
             );
 
             let retry: bool = match board.drop_chip(result, c) {
-                Ok(r) => return r,
+                Ok(r) => {
+                    stream.write(&board.to_string().as_bytes()).unwrap();
+                    return r;
+                }
                 Err(e) => {
                     println!("{}", e);
-                    println!("Sending signal to try again");
+                    println!("Sending signal to try again:");
 
-                    println!("Letting player know that it has to retry (sending a 2)...");
+                    print!("\tLetting player know that it has to retry (sending a 2)... ");
                     stream.write(&[2 as u8]).unwrap();
 
                     println!("Done!");
-                    println!("Waiting for player move...");
+                    print!("Waiting for player move... ");
 
                     true
                 }

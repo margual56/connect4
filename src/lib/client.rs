@@ -38,10 +38,10 @@ pub fn run(port: String) {
                     return;
                 }
 
-                let mut data2 = [0 as u8; 2 * usize::pow(3, 9)];
+                let mut data2 = [0 as u8; 4 * 9 * 9];
                 match stream.read(&mut data2) {
                     Ok(size) => {
-                        println!("{}", String::from_utf8_lossy(&data2[0..size]));
+                        println!("\n{}", String::from_utf8_lossy(&data2[0..size]));
                     }
                     Err(e) => {
                         println!("Failed to receive data: {}", e);
@@ -61,6 +61,15 @@ pub fn run(port: String) {
                 stream.write_all(&[col]).unwrap();
 
                 println!("Sent!");
+
+                match stream.read(&mut data2) {
+                    Ok(size) => {
+                        println!("\n{}", String::from_utf8_lossy(&data2[0..size]));
+                    }
+                    Err(e) => {
+                        println!("Failed to receive data: {}", e);
+                    }
+                }
             }
         }
         Err(e) => {

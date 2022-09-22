@@ -3,10 +3,11 @@ mod errors;
 pub mod server;
 
 use std::fmt::{self, Display};
+use tabled::{builder::Builder, Style, Table, Tabled};
 
 pub use errors::BoardError;
 
-#[derive(Clone, Copy, PartialEq, Debug)]
+#[derive(Clone, Copy, PartialEq, Debug, Tabled)]
 pub enum Chip {
     YELLOW,
     RED,
@@ -63,8 +64,6 @@ impl Board {
         if dropped_at.is_none() {
             self.state[col][self.size - 1] = chip.clone();
 
-            println!("New state: {}", self.to_string());
-
             dropped_at = Some((col, self.size - 1));
         }
 
@@ -115,20 +114,13 @@ impl Board {
     }
 
     pub fn to_string(&mut self) -> String {
-        let mut out = String::new();
+        let mut builder = Builder::default();
 
-        for j in 0..self.size {
-            for i in 0..self.size {
-                out += &format!("| {} ", self.state[i][j]);
-            }
-
-            out += "|\n";
+        for i in 0..self.size {
+            let s = self.state.clone().into_iter().map(|v| v[i]).collect::<Vec<Chip>>();
+            builder.add_record(s);
         }
 
-        for _ in 0..self.size {
-            out += "----";
-        }
-
-        return out + "-\n";
+        return builder.build().with(Style::modern()).to_string();
     }
 }

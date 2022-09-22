@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 inquire = "^0.3"
 clap = {version = "^3.2", features = ["derive"]}
+tabled = "^0.8"
