@@ -7,6 +7,9 @@ use tabled::{builder::Builder, Style, Tabled};
 
 pub use errors::BoardError;
 
+// Chips in a row needed to win
+pub const CHIPS_IN_A_ROW: u8 = 3;
+
 #[derive(Clone, Copy, PartialEq, Debug, Tabled)]
 pub enum Chip {
     YELLOW,
@@ -54,8 +57,6 @@ impl Board {
             if self.state[col][i + 1] != Chip::NONE {
                 self.state[col][i] = chip.clone();
 
-                println!("New state: {}", self.to_string());
-
                 dropped_at = Some((col, i));
                 break;
             }
@@ -72,38 +73,87 @@ impl Board {
 
     /// Returns either None or a winner
     pub fn check_state(&self, position: (usize, usize), chip: Chip) -> Option<Chip> {
+        let mut count: u8 = 0;
         //check col
-        for i in 0..self.size {
+        for i in (0.max(position.1 as i32 - 2) as usize)..self.size.min(position.1 + 3) {
             if self.state[position.0][i] != chip {
-                break;
+                count = 0;
+            } else {
+                count += 1;
             }
-            if i == self.size - 1 {
+
+            if count >= CHIPS_IN_A_ROW {
                 return Some(chip);
             }
         }
+
+        println!("Col count: {}", count);
+
+        count = 0;
 
         //check row
-        for i in 0..self.size {
+        for i in (0.max(position.0 as i32 - 2) as usize)..self.size.min(position.0 + 3) {
             if self.state[i][position.1] != chip {
-                break;
+                count = 0;
+            } else {
+                count += 1;
             }
-            if i == self.size - 1 {
+
+            if count >= CHIPS_IN_A_ROW {
                 return Some(chip);
             }
         }
 
+        println!("Row count: {}", count);
+        count = 0;
+
+        let iposition = (position.0 as i32, position.1 as i32);
         //check diag
-        if position.0 == position.1 {
-            //we're on a diagonal
-            for i in 0..self.size {
-                if self.state[i][i] != chip {
-                    break;
-                }
-                if i == self.size - 1 {
-                    return Some(chip);
-                }
+        for i in -2..3 {
+            if iposition.0 + i < 0
+                || iposition.0 + i >= self.size as i32
+                || iposition.1 + i < 0
+                || iposition.1 + i >= self.size as i32
+            {
+                continue;
+            }
+
+            if self.state[(iposition.0+i) as usize][(iposition.1+i) as usize] != chip {
+                count = 0;
+            }else{
+                count += 1;
+            }
+
+            if count >= CHIPS_IN_A_ROW {
+                return Some(chip);
             }
         }
+
+        println!("Diag count: {}", count);
+        count = 0;
+
+        //check inverse diag
+        for i in -2..3 {
+            if iposition.0 + i < 0
+                || iposition.0 + i >= self.size as i32
+                || iposition.1 - i < 0
+                || iposition.1 - i >= self.size as i32
+            {
+                continue;
+            }
+
+            if self.state[(iposition.0+i) as usize][(iposition.1-i) as usize] != chip {
+                count = 0;
+            }else{
+                count += 1;
+            }
+
+            if count >= CHIPS_IN_A_ROW {
+                return Some(chip);
+            }
+        }
+
+        println!("Inverse diag count: {}", count);
 
         //check draw
         if self.moves == (self.size * self.size - 1) as u32 {

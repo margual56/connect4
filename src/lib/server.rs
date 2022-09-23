@@ -27,6 +27,8 @@ pub fn run(size: usize) {
             winner = handle_turn(board, &player2, Chip::RED);
         }
 
+        println!("Winner is {:?}", winner);
+
         player1_turn = !player1_turn;
     }
 

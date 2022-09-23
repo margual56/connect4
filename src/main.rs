@@ -12,12 +12,17 @@ struct Cli {
     #[clap(short = 'p', long = "port", default_value = "3333")]
     port: String,
 
-    #[clap(short = 's', long = "size", default_value = "3")]
+    #[clap(short = 's', long = "size", default_value = "4")]
     board_size: usize,
 }
 
 fn main() {
     let args = Cli::parse();
+
+    if args.board_size < 4 || args.board_size > 9 {
+        println!("Error: The board size must be [4, 9]");
+        std::process::exit(-1);
+    }
 
     let run_server = match args.server {
         Some(b) => b,
