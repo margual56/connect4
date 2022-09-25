@@ -3,7 +3,7 @@ use tabled::{builder::Builder, Style};
 use super::{BoardError, Chip};
 
 // Chips in a row needed to win
-pub const CHIPS_IN_A_ROW: u8 = 4;
+pub const CHIPS_IN_A_ROW: i32 = 4;
 
 pub struct Board {
     state: Vec<Vec<Chip>>,
@@ -57,14 +57,16 @@ impl Board {
     pub fn check_state(&self, position: (usize, usize), chip: Chip) -> Option<Chip> {
         let mut count: u8 = 0;
         //check col
-        for i in (0.max(position.1 as i32 - 2) as usize)..self.size.min(position.1 + 3) {
+        for i in (0.max(position.1 as i32 - CHIPS_IN_A_ROW - 1) as usize)
+            ..self.size.min(position.1 + CHIPS_IN_A_ROW as usize)
+        {
             if self.state[position.0][i] != chip {
                 count = 0;
             } else {
                 count += 1;
             }
 
-            if count >= CHIPS_IN_A_ROW {
+            if count >= CHIPS_IN_A_ROW as u8 {
                 return Some(chip);
             }
         }
@@ -74,14 +76,16 @@ impl Board {
         count = 0;
 
         //check row
-        for i in (0.max(position.0 as i32 - 2) as usize)..self.size.min(position.0 + 3) {
+        for i in (0.max(position.0 as i32 - CHIPS_IN_A_ROW - 1) as usize)
+            ..self.size.min(position.0 + CHIPS_IN_A_ROW as usize)
+        {
             if self.state[i][position.1] != chip {
                 count = 0;
             } else {
                 count += 1;
             }
 
-            if count >= CHIPS_IN_A_ROW {
+            if count >= CHIPS_IN_A_ROW as u8 {
                 return Some(chip);
             }
         }
@@ -91,7 +95,7 @@ impl Board {
 
         let iposition = (position.0 as i32, position.1 as i32);
         //check diag
-        for i in -2..3 {
+        for i in -(CHIPS_IN_A_ROW - 1)..CHIPS_IN_A_ROW {
             if iposition.0 + i < 0
                 || iposition.0 + i >= self.size as i32
                 || iposition.1 + i < 0
@@ -106,7 +110,7 @@ impl Board {
                 count += 1;
             }
 
-            if count >= CHIPS_IN_A_ROW {
+            if count >= CHIPS_IN_A_ROW as u8 {
                 return Some(chip);
             }
         }
@@ -115,7 +119,7 @@ impl Board {
         count = 0;
 
         //check inverse diag
-        for i in -2..3 {
+        for i in -(CHIPS_IN_A_ROW - 1)..CHIPS_IN_A_ROW {
             if iposition.0 + i < 0
                 || iposition.0 + i >= self.size as i32
                 || iposition.1 - i < 0
@@ -130,7 +134,7 @@ impl Board {
                 count += 1;
             }
 
-            if count >= CHIPS_IN_A_ROW {
+            if count >= CHIPS_IN_A_ROW as u8 {
                 return Some(chip);
             }
         }
