@@ -1,31 +1,15 @@
+mod chip;
 pub mod client;
 mod errors;
 pub mod server;
 
-use std::fmt::{self, Display};
-use tabled::{builder::Builder, Style, Tabled};
+use tabled::{builder::Builder, Style};
 
+pub use chip::Chip;
 pub use errors::BoardError;
 
 // Chips in a row needed to win
-pub const CHIPS_IN_A_ROW: u8 = 3;
-
-#[derive(Clone, Copy, PartialEq, Debug, Tabled)]
-pub enum Chip {
-    YELLOW,
-    RED,
-    NONE,
-}
-
-impl Display for Chip {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match *self {
-            Chip::YELLOW => write!(f, "Y"),
-            Chip::RED => write!(f, "R"),
-            Chip::NONE => write!(f, " "),
-        }
-    }
-}
+pub const CHIPS_IN_A_ROW: u8 = 4;
 
 pub struct Board {
     state: Vec<Vec<Chip>>,
@@ -43,6 +27,10 @@ impl Board {
     }
 
     pub fn drop_chip(&mut self, col: usize, chip: Chip) -> Result<Option<Chip>, BoardError> {
+        if col >= self.size {
+            return Err(BoardError::InvalidColumn(col));
+        }
+
         if self.state[col][0] != Chip::NONE {
             return Err(BoardError::FullColumn);
         }
@@ -118,9 +106,9 @@ impl Board {
                 continue;
             }
 
-            if self.state[(iposition.0+i) as usize][(iposition.1+i) as usize] != chip {
+            if self.state[(iposition.0 + i) as usize][(iposition.1 + i) as usize] != chip {
                 count = 0;
-            }else{
+            } else {
                 count += 1;
             }
 
@@ -142,9 +130,9 @@ impl Board {
                 continue;
             }
 
-            if self.state[(iposition.0+i) as usize][(iposition.1-i) as usize] != chip {
+            if self.state[(iposition.0 + i) as usize][(iposition.1 - i) as usize] != chip {
                 count = 0;
-            }else{
+            } else {
                 count += 1;
             }
 
@@ -177,5 +165,37 @@ impl Board {
         }
 
         return builder.build().with(Style::modern()).to_string();
+    }
+
+    pub fn to_string_from_bytes(bytes: Vec<u8>, size: usize) -> String {
+        let tmp1: Vec<Chip> = bytes
+            .into_iter()
+            .map(|v| Chip::try_from(v).expect("Could not parse results"))
+            .collect();
+        let mut tmp: Vec<Vec<Chip>> = Vec::new();
+
+        for i in 1..(size + 1) {
+            tmp.push(tmp1[(i - 1) * size..i * size].to_vec());
+        }
+
+        let mut builder = Builder::default();
+
+        for i in 0..size {
+            let s = tmp.clone().into_iter().map(|v| v[i]).collect::<Vec<Chip>>();
+            builder.add_record(s);
+        }
+
+        return builder.build().with(Style::modern()).to_string();
+    }
+
+    pub fn as_1d(&mut self) -> Vec<u8> {
+        let mut lol: Vec<u8> = Vec::new();
+
+        self.state.clone().into_iter().for_each(|v| {
+            v.into_iter()
+                .for_each(|c| lol.push(c.try_into().expect("Could not convert chip to u8")))
+        });
+
+        return lol;
     }
 }

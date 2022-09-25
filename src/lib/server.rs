@@ -51,7 +51,7 @@ fn handle_turn(board: &mut Board, mut stream: &TcpStream, c: Chip) -> Option<Chi
     println!("Done!");
     print!("Sending player the board... ");
 
-    stream.write(&board.to_string().as_bytes()).unwrap();
+    stream.write(&board.as_1d()).unwrap();
 
     println!("Done!");
     print!("Waiting for player move... ");
@@ -70,11 +70,8 @@ fn handle_turn(board: &mut Board, mut stream: &TcpStream, c: Chip) -> Option<Chi
 
             let retry: bool = match board.drop_chip(result, c) {
                 Ok(r) => {
-                    stream.write(&board.to_string().as_bytes()).unwrap();
-                    println!(
-                        "Board size in bytes: {}",
-                        board.to_string().as_bytes().len()
-                    );
+                    stream.write(&board.as_1d()).unwrap();
+
                     return r;
                 }
                 Err(e) => {

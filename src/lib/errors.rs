@@ -3,6 +3,7 @@ use std::fmt;
 
 pub enum BoardError {
     FullColumn,
+    InvalidColumn(usize),
     Other,
 }
 
@@ -11,6 +12,9 @@ impl fmt::Display for BoardError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
             BoardError::FullColumn => write!(f, "The column is full"),
+            BoardError::InvalidColumn(c) => {
+                write!(f, "{} is not a valid column, it does not exist", c)
+            }
             BoardError::Other => write!(f, "Unknown error!"),
         }
     }
@@ -27,6 +31,7 @@ impl Error for BoardError {
     fn description(&self) -> &str {
         match *self {
             BoardError::FullColumn => "The column is full",
+            BoardError::InvalidColumn(_) => "That column does not exist",
             BoardError::Other => "Unknown error!",
         }
     }
@@ -34,6 +39,7 @@ impl Error for BoardError {
     fn cause(&self) -> Option<&dyn Error> {
         match *self {
             BoardError::FullColumn => None,
+            BoardError::InvalidColumn(_) => None,
             BoardError::Other => None,
         }
     }

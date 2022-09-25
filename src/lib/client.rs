@@ -1,6 +1,8 @@
 use std::io::{Read, Write};
 use std::net::TcpStream;
 
+use crate::lib::Board;
+
 pub fn run(port: String) {
     match TcpStream::connect(String::from("localhost:") + &port) {
         Ok(mut stream) => {
@@ -38,19 +40,18 @@ pub fn run(port: String) {
                     return;
                 }
 
-                // FIXME: The formula is incorrect
-                // Size of the board representation in bytes
-                // Each cell has its borders (+1) and surrounding spaces (+2), so
-                // Each cell has 4 characters wide and 4 characters tall (-1 repeated character), so
-                // The board has size*size cells. Therefore the size is size*size*(4*4 - 1) = size*size*15, but
-                // We need to add the final border (+size*2)
-                const MAX_BOARD_SIZE: usize = 9;
-                let mut data2 =
-                    [0 as u8; MAX_BOARD_SIZE * MAX_BOARD_SIZE * 30 + MAX_BOARD_SIZE * 2];
+                // 9*9
+                let mut data2 = [0 as u8; 81];
 
                 match stream.read(&mut data2) {
                     Ok(size) => {
-                        println!("\n{}", String::from_utf8_lossy(&data2[0..size]));
+                        println!(
+                            "\n{}",
+                            Board::to_string_from_bytes(
+                                data2.to_vec(),
+                                (size as f64).sqrt().floor() as usize
+                            )
+                        );
                     }
                     Err(e) => {
                         println!("Failed to receive data: {}", e);
@@ -73,7 +74,19 @@ pub fn run(port: String) {
 
                 match stream.read(&mut data2) {
                     Ok(size) => {
-                        println!("\n{}", String::from_utf8_lossy(&data2[0..size]));
+                        if size == 1 {
+                            println!("\tSomething went wrong");
+                            println!("\tIn an ideal world, you would be able to retry");
+                            println!("\tBut for now, it is a pending feature");
+                        } else {
+                            println!(
+                                "\n{}",
+                                Board::to_string_from_bytes(
+                                    data2.to_vec(),
+                                    (size as f64).sqrt().floor() as usize
+                                )
+                            );
+                        }
                     }
                     Err(e) => {
                         println!("Failed to receive data: {}", e);
