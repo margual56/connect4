@@ -1,5 +1,6 @@
 use std::fmt::{self, Display};
 use tabled::Tabled;
+use colored::Colorize;
 
 #[derive(Clone, Copy, PartialEq, Debug, Tabled)]
 pub enum Chip {
@@ -11,12 +12,12 @@ pub enum Chip {
 impl Display for Chip {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
-            Chip::YELLOW => write!(f, "Y"),
-            Chip::RED => write!(f, "R"),
-            Chip::NONE => write!(f, " "),
+            Chip::YELLOW => write!(f, "{}", "Y".yellow()),
+            Chip::RED => write!(f, "{}", "R".red()),
+            Chip::NONE => write!(f, "{}", " ".yellow()),
         }
     }
-}
+}   
 
 impl TryFrom<Chip> for u8 {
     type Error = &'static str;
