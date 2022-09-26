@@ -183,7 +183,13 @@ impl Board {
             builder.add_record(s);
         }
 
-        return builder.build().with(Style::modern()).to_string();
+        let mut indices = String::new();
+
+        for i in 0..size {
+            indices += &format!("  {} ", i);
+        }
+
+        return builder.build().with(Style::modern()).to_string() + "\n" + &indices;
     }
 
     pub fn as_1d(&mut self) -> Vec<u8> {
