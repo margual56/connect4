@@ -7,7 +7,7 @@ use std::net::{Shutdown, TcpListener, TcpStream};
 pub fn run(port: String, size: usize) {
     let listener = TcpListener::bind(String::from("0.0.0.0:") + &port).unwrap();
     // accept connections and process them, spawning a new thread for each one
-    println!("Server listening on port 3333");
+    println!("Server listening on port {}", port);
 
     let board = &mut Board::new(size);
     let mut player1 = next_player(&listener);
