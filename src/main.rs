@@ -14,6 +14,9 @@ struct Cli {
 
     #[clap(short = 's', long = "size", default_value = "4")]
     board_size: usize,
+
+    #[clap(long="ip", default_value="localhost")]
+    ip: String,
 }
 
 fn main() {
@@ -38,6 +41,6 @@ fn main() {
     if run_server {
         server::run(args.board_size);
     } else {
-        client::run(args.port);
+        client::run(args.ip, args.port);
     }
 }

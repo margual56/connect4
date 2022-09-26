@@ -3,8 +3,8 @@ use std::net::TcpStream;
 
 use crate::lib::Board;
 
-pub fn run(port: String) {
-    match TcpStream::connect(String::from("localhost:") + &port) {
+pub fn run(ip: String, port: String) {
+    match TcpStream::connect(ip + ":" + &port) {
         Ok(mut stream) => {
             println!("Successfully connected to server in port 3333");
 
