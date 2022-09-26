@@ -12,9 +12,9 @@ pub enum Chip {
 impl Display for Chip {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
-            Chip::YELLOW => write!(f, "{}", "Y".yellow()),
-            Chip::RED => write!(f, "{}", "R".red()),
-            Chip::NONE => write!(f, "{}", " ".yellow()),
+            Chip::YELLOW => write!(f, "{}", "Y".yellow().bold()),
+            Chip::RED => write!(f, "{}", "R".red().bold()),
+            Chip::NONE => write!(f, "{}", " ".yellow().bold()),
         }
     }
 }   

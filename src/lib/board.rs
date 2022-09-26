@@ -1,4 +1,4 @@
-use tabled::{builder::Builder, Style, Width};
+use tabled::{builder::Builder, Style};
 
 use super::{BoardError, Chip};
 
