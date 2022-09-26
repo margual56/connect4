@@ -4,8 +4,8 @@ use super::Board;
 use std::io::{Error, Read, Write};
 use std::net::{Shutdown, TcpListener, TcpStream};
 
-pub fn run(size: usize) {
-    let listener = TcpListener::bind("0.0.0.0:3333").unwrap();
+pub fn run(port: String, size: usize) {
+    let listener = TcpListener::bind(String::from("0.0.0.0:") + &port).unwrap();
     // accept connections and process them, spawning a new thread for each one
     println!("Server listening on port 3333");
 

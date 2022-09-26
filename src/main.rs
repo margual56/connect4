@@ -39,7 +39,7 @@ fn main() {
     };
 
     if run_server {
-        server::run(args.board_size);
+        server::run(args.port, args.board_size);
     } else {
         client::run(args.ip, args.port);
     }
