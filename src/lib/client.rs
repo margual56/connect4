@@ -6,7 +6,7 @@ use crate::lib::Board;
 pub fn run(ip: String, port: String) {
     match TcpStream::connect(ip + ":" + &port) {
         Ok(mut stream) => {
-            println!("Successfully connected to server in port 3333");
+            println!("Successfully connected to server in port {}", port);
 
             loop {
                 println!("Ready to play, waiting my turn...");
