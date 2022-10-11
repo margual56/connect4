@@ -29,7 +29,6 @@ pub fn run(ip: String, port: String) {
                                 return;
                             },
                         }
-                        println!("Received: {}", data[0]);
 
                         data[0] != 1 && data[0] != 2 && data[0] != 3 && data[0] != 4
                     }
