@@ -19,14 +19,18 @@ pub fn run(ip: String, port: String) {
                             0 => println!("Not your turn"),
                             1 => println!("It's your turn!"),
                             2 => println!("Illegal move, please try again"),
-                            3 => println!("Game ended"),
-                            _ => println!(
-                                "Oops! Something went wrong... Code received was '{}'",
-                                data[0]
-                            ),
+                            3 => println!("Game ended: YOU LOST"),
+                            4 => println!("Game ended: YOU WON"),
+                            _ => {
+                                println!(
+                                    "Oops! Something went wrong... Code received was '{}'", data[0]
+                                );
+
+                                return;
+                            },
                         }
 
-                        data[0] != 1 && data[0] != 2 && data[0] != 3
+                        data[0] != 1 && data[0] != 2 && data[0] != 3 && data[0] != 4
                     }
                     Err(e) => {
                         println!("Failed to receive data: {}", e);
@@ -35,8 +39,7 @@ pub fn run(ip: String, port: String) {
                     }
                 } {}
 
-                if data[0] == 3 {
-                    println!("Game ended!");
+                if data[0] == 3 || data[0] == 4{
                     return;
                 }
 
