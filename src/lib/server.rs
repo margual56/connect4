@@ -33,10 +33,26 @@ pub fn run(port: String, size: usize) {
     }
 
     print!("Telling player1 that game has ended... ");
-    player1.write(&[1 as u8]).unwrap();
+    if let Some(w) = winner {
+        if w == Chip::YELLOW {
+            player1.write(&[4 as u8]).unwrap();
+        }else{
+            player1.write(&[3 as u8]).unwrap();
+        }
+    }else{
+        player1.write(&[255 as u8]).unwrap();
+    }
     println!("Done!");
     print!("Telling player2 that game has ended... ");
-    player2.write(&[3 as u8]).unwrap();
+    if let Some(w) = winner {
+        if w == Chip::RED {
+            player2.write(&[4 as u8]).unwrap();
+        }else{
+            player2.write(&[3 as u8]).unwrap();
+        }
+    }else{
+        player2.write(&[255 as u8]).unwrap();
+    }
     println!("Done!");
 
     println!("Shutting down the server...");
