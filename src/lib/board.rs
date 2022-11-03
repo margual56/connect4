@@ -157,8 +157,8 @@ impl Board {
                 .state
                 .clone()
                 .into_iter()
-                .map(|v| v[i])
-                .collect::<Vec<Chip>>();
+                .map(|v| format!("{}", v[i]))
+                .collect::<Vec<String>>();
             builder.add_record(s);
         }
 
@@ -179,7 +179,7 @@ impl Board {
         let mut builder = Builder::default();
 
         for i in 0..size {
-            let s = tmp.clone().into_iter().map(|v| v[i]).collect::<Vec<Chip>>();
+            let s = tmp.clone().into_iter().map(|v| format!("{}", v[i])).collect::<Vec<String>>();
             builder.add_record(s);
         }
 

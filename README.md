@@ -1,5 +1,5 @@
-# tic-tac-toe
-Tic Tac Toe game with online multiplayer
+# Connect 4
+Connect 4 game with online multiplayer with an arbitrary board size
 
 # Setup
 The setup consists of two clients and a server that keeps track of the game state.
@@ -13,12 +13,12 @@ Go to [the releases page](https://github.com/margual56/tic-tac-toe/releases) and
 
 ## Instructions
 1. Run the server:
-  - Run `./tic-tac-toe --server true`
+  - Run `./connect4 --server true`
   - You can specify the port using `--port <port>`. The default one is 3333.
   - You can change the size of the board with `--size <size>`
   
 2. Run the two clients:
-  - Run `./tic-tac-toe --server false`
+  - Run `./connect4 --server false`
   - You can specify the IP with `--ip <ip>`. The default is localhost.
   - You can specify the port using `--port <port>`. The default one is 3333.
   
