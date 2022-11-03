@@ -1,6 +1,6 @@
 use tabled::{builder::Builder, Style};
-
-use super::{BoardError, Chip};
+use crate::chip::Chip;
+use crate::errors::BoardError;
 
 // Chips in a row needed to win
 pub const CHIPS_IN_A_ROW: i32 = 4;

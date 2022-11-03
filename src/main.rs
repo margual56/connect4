@@ -1,8 +1,8 @@
-pub mod lib;
-
 use clap::Parser;
 use inquire::Select;
-use lib::{client, server};
+
+use connect4::client;
+use connect4::server;
 
 #[derive(Parser)]
 struct Cli {

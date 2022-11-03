@@ -2,15 +2,14 @@
 
 CARGO_DIR=$HOME/.cargo/bin
 
-echo Compiling linux gnu
-$CARGO_DIR/cross build --target x86_64-unknown-linux-gnu --release
+targets=(x86_64-unknown-linux-gnu x86_64-unknown-linux-musl x86_64-pc-windows-gnu aarch64-linux-android)
+mkdir ./bin
 
-echo Compiling linux musl
-$CARGO_DIR/cross build --target x86_64-unknown-linux-musl --release
-
-echo Compiling windows
-$CARGO_DIR/cross build --target x86_64-pc-windows-gnu --release
-
-echo Compiling android
-$CARGO_DIR/cross build --target aarch64-linux-android --release
+for target in "${targets[@]}"
+do
+	echo Compiling $target
+	$CARGO_DIR/cross build --target $target --release || exit
+	mkdir ./bin/$target
+	mv "./target/$target/release" "./bin/$target"
+done
 

@@ -1,7 +1,7 @@
 use std::io::{Read, Write};
 use std::net::TcpStream;
 
-use crate::lib::Board;
+use crate::board::Board;
 
 pub fn run(ip: String, port: String) {
     match TcpStream::connect(ip + ":" + &port) {

@@ -1,6 +1,5 @@
-use crate::lib::Chip;
-
-use super::Board;
+use crate::chip::Chip;
+use crate::board::Board;
 use std::io::{Error, Read, Write};
 use std::net::{Shutdown, TcpListener, TcpStream};
 
