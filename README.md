@@ -7,6 +7,10 @@ The setup consists of two clients and a server that keeps track of the game stat
 Said server is independent from the clients, meaning that it could theoretically be deployed 
 with a simple scripts that creates a new server when it receives a request.
 
+## Releases
+I have cross-compiled the game for windows, linux gnu and linux musl.
+Go to [the releases page](https://github.com/margual56/tic-tac-toe/releases) and download the one you want to use!
+
 ## Instructions
 1. Run the server:
   - Run `./tic-tac-toe --server true`
